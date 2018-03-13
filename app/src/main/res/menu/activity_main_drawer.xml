@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main"
+            android:title="Strona Główna" />
+        <item
+            android:id="@+id/nav_measurements"
+            android:title="Pomiary" />
+        <item
+            android:id="@+id/nav_forecasts"
+            android:title="Prognozy" />
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_copyrights"
+            android:title="Copyrights" />
+    </group>
+
+</menu>
