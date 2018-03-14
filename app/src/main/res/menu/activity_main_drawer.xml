@@ -9,10 +9,16 @@
             android:title="Strona Główna" />
         <item
             android:id="@+id/nav_measurements"
-            android:title="Pomiary" />
+            android:title="Dane synoptyczne" />
         <item
             android:id="@+id/nav_forecasts"
-            android:title="Prognozy" />
+            android:title="Prognoza warunków meteo" />
+        <item
+            android:id="@+id/nav_metars"
+            android:title="Depesze METAR" />
+        <item
+            android:id="@+id/nav_gios"
+            android:title="Pomiary jakości powietrza" />
     </group>
 
     <group

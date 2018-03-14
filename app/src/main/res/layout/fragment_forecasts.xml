@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Prognozy dla stacji"
+        android:textColor="@color/colorPrimaryDark"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView android:layout_width="match_parent"

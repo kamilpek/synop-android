@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Aplikacja Pogodowa"
+        android:textColor="@color/colorPrimaryDark"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
@@ -24,13 +25,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Pomiary" />
+            android:textColor="#FFFFFF"
+            android:text="Dane synoptyczne" />
         <Button
             android:id="@+id/forecastsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Prognozy" />
+            android:textColor="#FFFFFF"
+            android:text="Prognoza warunków meteo" />
+        <Button
+            android:id="@+id/metarsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:text="Depesze METAR" />
+        <Button
+            android:id="@+id/giosButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:text="Pomiary jakości powietrza" />
 
     </LinearLayout>
 

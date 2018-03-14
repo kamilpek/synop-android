@@ -4,18 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp"
-    tools:context="pl.kp_software.synoptyk.MeasurementsFragment">
+    tools:context="pl.kp_software.synoptyk.GiossFragment">
 
     <TextView
         android:id="@+id/welcomeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pomiary ze stacji"
+        android:text="Jakość powietrza"
         android:textColor="@color/colorPrimaryDark"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/measurements_list_view"></ListView>
+        android:id="@+id/gioss_list_view"></ListView>
 
 </LinearLayout>

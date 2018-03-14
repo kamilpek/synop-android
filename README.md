@@ -5,7 +5,7 @@
 Pomiary, prognozy :sunny: :cloud: :snowflake:
 
 ## Wersja produktu
-* v1.1.0 (13.03.2018)
+* v1.2.0 (14.03.2018)
 
 ## Serwer
 [synoptyk.kp-software.pl](https://synoptyk.kp-software.pl/)

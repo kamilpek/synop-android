@@ -72,6 +72,58 @@
             android:text=" " />
 
         <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Depesze METAR" />
+        <TextView
+            android:id="@+id/textView8a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="©OGIMET" />
+        <TextView
+            android:id="@+id/textView8b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="http://www.ogimet.com/" />
+
+        <TextView
+            android:id="@+id/textView8c"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=" " />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pomiary jakości powietrza" />
+        <TextView
+            android:id="@+id/textView9a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="©Główny Inspektorat Ochrony Środowiska" />
+        <TextView
+            android:id="@+id/textView9b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="http://www.gios.gov.pl/" />
+
+        <TextView
+            android:id="@+id/textView9c"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=" " />
+
+        <TextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,13 +134,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="©Kamil Pek" />
+            android:text="©KP-SOFTWARE" />
         <TextView
             android:id="@+id/textView5b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="kamil.pek@gmail.com" />
+            android:text="kamil-pek@kp-software.pl" />
 
         <TextView
             android:id="@+id/textView6"
@@ -102,7 +154,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="v1.1.0 (13.03.2018)" />
+            android:text="v1.2.0 (14.03.2018)" />
 
     </LinearLayout>
 

@@ -41,6 +41,29 @@ public class MainFragment extends Fragment {
                     }
                 });
 
+        Button metarsButton = (Button) rootView.findViewById(R.id.metarsButton);
+        metarsButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        MetarsFragment metarsFragment = new MetarsFragment();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, metarsFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
+
+        Button giosButton = (Button) rootView.findViewById(R.id.giosButton);
+        giosButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        GiossFragment giossFragment = new GiossFragment();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, giossFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
 
         return rootView;
 

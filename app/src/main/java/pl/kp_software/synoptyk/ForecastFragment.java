@@ -146,7 +146,12 @@ public class ForecastFragment extends Fragment {
                 String strdate_from = sdfDestination.format(date_from);
                 String strdate_to = sdfDestination.format(date_to);
                 String wind_direct = wind_directs[i].substring(0, wind_directs[i].length() - 2);
-                String cardinal = cardinals(Integer.parseInt(wind_direct));
+                String cardinal;
+                try{
+                    cardinal = cardinals(Integer.parseInt(wind_direct));
+                } catch(NumberFormatException ex){
+                    cardinal = cardinals(0);
+                }
                 String temperature = temperatures[i].substring(1, temperatures[i].length() - 1);
                 String situation = situations[i].substring(1, situations[i].length() - 1);
                 forecastList.add(strdate_from + " - " + strdate_to + "  " +

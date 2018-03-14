@@ -85,6 +85,18 @@ public class MainActivity extends AppCompatActivity
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, forecastsFragment);
                 fragmentTransaction.commit();
+            } else if (lastFragment == "GiossFragment"){
+                GiossFragment giossFragment = new GiossFragment();
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, giossFragment);
+                fragmentTransaction.commit();
+            } else if (lastFragment == "MetarsFragment"){
+                MetarsFragment metarsFragment = new MetarsFragment();
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, metarsFragment);
+                fragmentTransaction.commit();
             } else if (lastFragment == "empty"){
                 super.onBackPressed();
             } else {
@@ -145,7 +157,21 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container, forecastsFragment);
             fragmentTransaction.commit();
 
-        }  else if (id == R.id.nav_copyrights) {
+        } else if (id == R.id.nav_metars) {
+            MetarsFragment metarsFragment = new MetarsFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, metarsFragment);
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_gios) {
+            GiossFragment giossFragment = new GiossFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, giossFragment);
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_copyrights) {
             CopyrightsFragment copyrightsFragment = new CopyrightsFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
