@@ -93,8 +93,8 @@ public class GiossFragment extends Fragment {
                     st_index = get_index_level(6);
                 }
                 String id  = giossCursor.getString(3);
-                giossList.add(station + " - " + calc_date +
-                        " | Polski indeks jakości powietrza: " + st_index );
+                giossList.add(station + "\n" + calc_date +
+                        " \nPolski indeks jakości powietrza:\n" + st_index );
                 giossIDs.add(id);
             }
         }
@@ -129,7 +129,7 @@ public class GiossFragment extends Fragment {
     private void loadMetarsFromAPI(String url) {
         GiossFragment.GetMeasurs getMeasurements = new GiossFragment.GetMeasurs(getActivity());
         getMeasurements.setMessageLoading("Pobieranie pomiarów...");
-        myDb.deleteDataMeasurementsAll();
+        myDb.deleteDataGiossAll();
         getMeasurements.execute(url);
     }
 

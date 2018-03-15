@@ -154,11 +154,10 @@ public class ForecastFragment extends Fragment {
                 }
                 String temperature = temperatures[i].substring(1, temperatures[i].length() - 1);
                 String situation = situations[i].substring(1, situations[i].length() - 1);
-                forecastList.add(strdate_from + " - " + strdate_to + "  " +
-                        "Temperatura: " + temperature + (char) 0x00B0 + "C, Ciśnienie: " + preasures[i] + "hPa, " +
-                        "Prędkość wiatru: " + wind_speeds[i] + "m/s, Kierunek wiatru " +
-                        "" + cardinal + ", Opady: " +
-                        "" + precipitations[i] + "mm, Sytuacja (ang): " + situation + ".");
+                forecastList.add(strdate_from + " - " + strdate_to + "\n" +
+                        "Temperatura: " + temperature + (char) 0x00B0 + "C, Ciśnienie: " + preasures[i] + "hPa\n" +
+                        "Opady: " + precipitations[i] + " mm, Prędkość wiatru: " + wind_speeds[i] + "m/s" +
+                        "\nKierunek wiatru " + cardinal + "\nSytuacja (ang): " + situation + ".");
             }
 
             try{

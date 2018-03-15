@@ -71,7 +71,7 @@ public class MeasurementsFragment extends Fragment {
                 String station = measurementsCursor.getString(8);
                 String id = measurementsCursor.getString(9);
                 measurementsList.add(station + " - " + date + " - " + hour + " UTC" +
-                        " | Temperatura: " + temperature + (char) 0x00B0 + "C - Opady " + rainfall + "mm");
+                        "\nTemperatura: " + temperature + (char) 0x00B0 + "C - Opady " + rainfall + "mm");
                 measurementsIDs.add(id);
             }
         }
@@ -131,7 +131,7 @@ public class MeasurementsFragment extends Fragment {
                     String preasure = jsonTickets.getJSONObject(i).getString("preasure");
                     String rainfall = jsonTickets.getJSONObject(i).getString("rainfall");
                     String date = jsonTickets.getJSONObject(i).getString("date");
-                    String station = jsonTickets.getJSONObject(i).getString("station_number");
+                    String station = jsonTickets.getJSONObject(i).getString("station");
                     isInserted = myDb.insertDataMeasurements(hour, temperature, wind_speed, wind_direct, humidity, preasure, rainfall, date, station);
                 }
                 if(isInserted == true) {

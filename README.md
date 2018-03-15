@@ -5,13 +5,13 @@
 Pomiary, prognozy :sunny: :cloud: :snowflake:
 
 ## Wersja produktu
-* v1.2.0 (14.03.2018)
+* v1.2.1 (15.03.2018)
 
 ## Serwer
 [synoptyk.kp-software.pl](https://synoptyk.kp-software.pl/)
 
 ## apk
-[synoptyk-v101.apk](https://github.com/kamilpek/synop-android/blob/master/synoptyk-v101.apk)
+[Google Play](https://play.google.com/store/apps/details?id=pl.kp_software.synoptyk)
 
 ## Autor
 [Kamil Pek](https://github.com/kamilpek)

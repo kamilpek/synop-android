@@ -67,7 +67,7 @@ public class MetarsFragment extends Fragment {
                 String station = metarsCursor.getString(0);
                 String day = metarsCursor.getString(1);
                 String hour = metarsCursor.getString(2);
-                String date = metarsCursor.getString(3);
+                String metar = metarsCursor.getString(3);
                 String message = metarsCursor.getString(4);
                 String created_at = metarsCursor.getString(5);
                 String situation = metarsCursor.getString(6);
@@ -78,8 +78,8 @@ public class MetarsFragment extends Fragment {
                 String temperature = metarsCursor.getString(11);
                 String pressure = metarsCursor.getString(12);
                 String id = metarsCursor.getString(13);
-                metarsList.add(station + " - " + date + " - " + hour + " UTC" +
-                        " | Temperatura: " + temperature + (char) 0x00B0 + "C - Prędkość wiatru " + wind_speed + "m/s");
+                metarsList.add(station + " - " + hour + " UTC\n" +
+                        "Temperatura: " + temperature + "\nPrędkość wiatru " + wind_speed + "m/s\n" + metar);
                 metarsIDs.add(id);
             }
         }
@@ -114,7 +114,7 @@ public class MetarsFragment extends Fragment {
     private void loadMetarsFromAPI(String url) {
         MetarsFragment.GetMetars getMeasurements = new MetarsFragment.GetMetars(getActivity());
         getMeasurements.setMessageLoading("Pobieranie pomiarów...");
-        myDb.deleteDataMeasurementsAll();
+        myDb.deleteDataMetarsAll();
         getMeasurements.execute(url);
     }
 

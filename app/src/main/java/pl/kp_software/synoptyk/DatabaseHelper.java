@@ -244,7 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllDataMetarRaports(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select STATION, DAY, HOUR, METAR, MESSAGE, CREATED_AT, SITUATION, VISIBILITY, CLOUD_COVER, WIND_DIRECT, " +
-                "WIND_SPEED, TEMPERATURE, PRESSURE, ID from "+ TABLE_METAR_RAPORTS, null);
+                "WIND_SPEED, TEMPERATURE, PRESSURE, ID from "+ TABLE_METAR_RAPORTS + " ORDER BY STATION", null);
         return res;
     }
 
@@ -252,7 +252,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select STATION, CALC_DATE, ST_INDEX, ID, CO_INDEX, PM10_INDEX, C6H6_INDEX, NO2_INDEX, PM25_INDEX, O3_INDEX, " +
                 "SO2_INDEX, CO_VALUE, PM10_VALUE, C6H6_VALUE, NO2_VALUE, PM25_VALUE, O3_VALUE, SO2_VALUE, CO_DATE, PM10_DATE, C6H6_DATE, " +
-                "NO2_DATE, PM25_DATE, O3_DATE, SO2_DATE from "+ TABLE_GIOS_MEASURMENTS, null);
+                "NO2_DATE, PM25_DATE, O3_DATE, SO2_DATE from "+ TABLE_GIOS_MEASURMENTS + " ORDER BY STATION", null);
         return res;
     }
 
@@ -298,5 +298,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Integer deleteDataStationsAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_STATIONS, null, null);
+    }
+
+    public Integer deleteDataMetarsAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_METAR_RAPORTS, null, null);
+    }
+
+    public Integer deleteDataGiossAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_GIOS_MEASURMENTS, null, null);
     }
 }

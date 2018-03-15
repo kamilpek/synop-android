@@ -72,7 +72,7 @@ public class ForecastsFragment extends Fragment {
                 String station = forecastsCursor.getString(11);
                 String id = forecastsCursor.getString(12);
                 forecastsList.add(station + " - " + date + " - " + hour + " UTC" +
-                        " | Następna prognoza: " + next );
+                        "\nNastępna prognoza: " + next );
                 forecastsIDs.add(id);
             }
         }
