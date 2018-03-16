@@ -23,6 +23,7 @@ import java.util.List;
 
 public class GiossFragment extends Fragment {
     DatabaseHelper myDb;
+    View rootView;
 
     public GiossFragment() {
         // Required empty public constructor
@@ -31,28 +32,12 @@ public class GiossFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_gioss, container, false);
+        rootView = inflater.inflate(R.layout.fragment_gioss, container, false);
         myDb = new DatabaseHelper(getActivity());
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "MainFragment";
-
-        if (isNetworkAvailable() == true){
-            try {
-                loadMetarsFromAPI("http://synoptyk.kp-software.pl/api/v1/gios_measurements.json");
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            viewAll();
-        }
+        viewAll();
         return rootView;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public String get_index_level(Integer level){
@@ -99,7 +84,7 @@ public class GiossFragment extends Fragment {
             }
         }
 
-        ListView giossListView = (ListView) getView().findViewById(R.id.gioss_list_view);
+        ListView giossListView = (ListView) rootView.findViewById(R.id.gioss_list_view);
         if (giossListView != null) {
             giossListView.setAdapter(new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, giossList));
@@ -125,66 +110,4 @@ public class GiossFragment extends Fragment {
             Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_LONG).show();
         }
     }
-
-    private void loadMetarsFromAPI(String url) {
-        GiossFragment.GetMeasurs getMeasurements = new GiossFragment.GetMeasurs(getActivity());
-        getMeasurements.setMessageLoading("Pobieranie pomiarów...");
-        myDb.deleteDataGiossAll();
-        getMeasurements.execute(url);
-    }
-
-    private class GetMeasurs extends UrlJsonAsyncTask {
-        public GetMeasurs(Context context) {
-            super(context);
-        }
-        boolean isInserted;
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            try {
-                JSONArray jsonMeasurs = json.getJSONObject("data").getJSONArray("gios_measurments");
-                int length = jsonMeasurs.length();
-
-                for (int i = 0; i < length; i++) {
-                    String station = jsonMeasurs.getJSONObject(i).getString("station");
-                    String calc_date = jsonMeasurs.getJSONObject(i).getString("calc_date");
-                    String st_index = jsonMeasurs.getJSONObject(i).getString("st_index");
-                    String co_index = jsonMeasurs.getJSONObject(i).getString("co_index");
-                    String pm10_index = jsonMeasurs.getJSONObject(i).getString("pm10_index");
-                    String c6h6_index = jsonMeasurs.getJSONObject(i).getString("c6h6_index");
-                    String no2_index = jsonMeasurs.getJSONObject(i).getString("no2_index");
-                    String pm25_index = jsonMeasurs.getJSONObject(i).getString("pm25_index");
-                    String o3_index = jsonMeasurs.getJSONObject(i).getString("o3_index");
-                    String so2_index = jsonMeasurs.getJSONObject(i).getString("so2_index");
-                    String co_value = jsonMeasurs.getJSONObject(i).getString("co_value");
-                    String pm10_value = jsonMeasurs.getJSONObject(i).getString("pm10_value");
-                    String c6h6_value = jsonMeasurs.getJSONObject(i).getString("c6h6_value");
-                    String no2_value = jsonMeasurs.getJSONObject(i).getString("no2_value");
-                    String pm25_value = jsonMeasurs.getJSONObject(i).getString("pm25_value");
-                    String o3_value = jsonMeasurs.getJSONObject(i).getString("o3_value");
-                    String so2_value = jsonMeasurs.getJSONObject(i).getString("so2_value");
-                    String co_date = jsonMeasurs.getJSONObject(i).getString("co_date");
-                    String pm10_date = jsonMeasurs.getJSONObject(i).getString("pm10_date");
-                    String c6h6_date = jsonMeasurs.getJSONObject(i).getString("c6h6_date");
-                    String no2_date = jsonMeasurs.getJSONObject(i).getString("no2_date");
-                    String pm25_date = jsonMeasurs.getJSONObject(i).getString("pm25_date");
-                    String o3_date = jsonMeasurs.getJSONObject(i).getString("o3_date");
-                    String so2_date = jsonMeasurs.getJSONObject(i).getString("so2_date");
-                    isInserted = myDb.insertDataGiosMeasurments(station, calc_date, st_index, co_index, pm10_index, c6h6_index, no2_index, pm25_index, o3_index, so2_index, co_value, pm10_value, c6h6_value, no2_value, pm25_value, o3_value, so2_value, co_date, pm10_date, c6h6_date, no2_date, pm25_date, o3_date, so2_date);
-                }
-                if(isInserted == true) {
-                    Toast.makeText(getActivity(), "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
-                    viewAll();
-                }
-                else
-                    Toast.makeText(getActivity(), String.format( "Nie zapisano dnaych."), Toast.LENGTH_LONG).show();
-
-            } catch (Exception e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            } finally {
-                super.onPostExecute(json);
-            }
-        }
-    }
-
 }

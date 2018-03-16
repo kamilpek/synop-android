@@ -6,8 +6,8 @@ android {
         applicationId "pl.kp_software.synoptyk"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 3
-        versionName "1.2.1"
+        versionCode 4
+        versionName "1.2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

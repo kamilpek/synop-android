@@ -2,10 +2,10 @@
 ## Dedykowana aplikacja na Androida
 
 ## Wstęp
-Pomiary, prognozy :sunny: :cloud: :snowflake:
+Pomiary, prognozy, depesze METAR, jakość powietrza :sunny: :cloud: :snowflake:
 
 ## Wersja produktu
-* v1.2.1 (15.03.2018)
+* v1.2.2 (16.03.2018)
 
 ## Serwer
 [synoptyk.kp-software.pl](https://synoptyk.kp-software.pl/)

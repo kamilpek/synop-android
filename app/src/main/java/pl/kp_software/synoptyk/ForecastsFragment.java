@@ -23,30 +23,21 @@ import java.util.List;
 
 public class ForecastsFragment extends Fragment {
     DatabaseHelper myDb;
+    View rootView;
 
     public ForecastsFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_forecasts, container, false);
+        rootView = inflater.inflate(R.layout.fragment_forecasts, container, false);
         myDb = new DatabaseHelper(getActivity());
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "MainFragment";
-
-        if (isNetworkAvailable() == true){
-            try {
-                loadForecastsFromAPI("http://synoptyk.kp-software.pl/api/v1/forecasts.json");
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            viewAll();
-        }
+        viewAll();
         return rootView;
     }
 
@@ -77,7 +68,7 @@ public class ForecastsFragment extends Fragment {
             }
         }
 
-        ListView forecasts = (ListView) getView().findViewById(R.id.forecasts_list_view);
+        ListView forecasts = (ListView) rootView.findViewById(R.id.forecasts_list_view);
         if (forecasts != null) {
             forecasts.setAdapter(new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, forecastsList));
@@ -101,55 +92,6 @@ public class ForecastsFragment extends Fragment {
             );
         } else {
             Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void loadForecastsFromAPI(String url) {
-        ForecastsFragment.GetForecasts getForecasts = new ForecastsFragment.GetForecasts(getActivity());
-        getForecasts.setMessageLoading("Pobieranie prognozy...");
-        myDb.deleteDataMForecastsAll();
-        getForecasts.execute(url);
-    }
-
-    private class GetForecasts extends UrlJsonAsyncTask {
-        public GetForecasts(Context context) {
-            super(context);
-        }
-        boolean isInserted;
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            try {
-                JSONArray jsonTickets = json.getJSONObject("data").getJSONArray("forecasts");
-                int length = jsonTickets.length();
-
-                for (int i = 0; i < length; i++) {
-                    String hour = jsonTickets.getJSONObject(i).getString("hour");
-                    String date = jsonTickets.getJSONObject(i).getString("date");
-                    String next = jsonTickets.getJSONObject(i).getString("next");
-                    String times_from = jsonTickets.getJSONObject(i).getString("times_from");
-                    String times_to = jsonTickets.getJSONObject(i).getString("times_to");
-                    String temperatures = jsonTickets.getJSONObject(i).getString("temperatures");
-                    String wind_speeds = jsonTickets.getJSONObject(i).getString("wind_speeds");
-                    String wind_directs = jsonTickets.getJSONObject(i).getString("wind_directs");
-                    String preasures = jsonTickets.getJSONObject(i).getString("preasures");
-                    String situations = jsonTickets.getJSONObject(i).getString("situations");
-                    String precipitations = jsonTickets.getJSONObject(i).getString("precipitations");
-                    String station = jsonTickets.getJSONObject(i).getString("station_number");
-                    isInserted = myDb.insertDataForecasts(hour, date, next, times_from, times_to, temperatures, wind_speeds, wind_directs, preasures, situations, precipitations, station);
-                }
-                if(isInserted == true) {
-                    Toast.makeText(getActivity(), "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
-                    viewAll();
-                }
-                else
-                    Toast.makeText(getActivity(), String.format( "Nie zapisano dnaych."), Toast.LENGTH_LONG).show();
-
-            } catch (Exception e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            } finally {
-                super.onPostExecute(json);
-            }
         }
     }
 }

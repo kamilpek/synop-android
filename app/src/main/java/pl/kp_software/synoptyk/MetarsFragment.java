@@ -23,6 +23,7 @@ import java.util.List;
 
 public class MetarsFragment extends Fragment {
     DatabaseHelper myDb;
+    View rootView;
 
     public MetarsFragment() {
         // Required empty public constructor
@@ -31,28 +32,12 @@ public class MetarsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_metars, container, false);
+        rootView = inflater.inflate(R.layout.fragment_metars, container, false);
         myDb = new DatabaseHelper(getActivity());
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "MainFragment";
-
-        if (isNetworkAvailable() == true){
-            try {
-                loadMetarsFromAPI("http://synoptyk.kp-software.pl/api/v1/metar_raports.json");
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            viewAll();
-        }
+        viewAll();
         return rootView;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void viewAll() {
@@ -84,7 +69,7 @@ public class MetarsFragment extends Fragment {
             }
         }
 
-        ListView metarsListView = (ListView) getView().findViewById(R.id.metars_list_view);
+        ListView metarsListView = (ListView) rootView.findViewById(R.id.metars_list_view);
         if (metarsListView != null) {
             metarsListView.setAdapter(new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, metarsList));
@@ -108,56 +93,6 @@ public class MetarsFragment extends Fragment {
             );
         } else {
             Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void loadMetarsFromAPI(String url) {
-        MetarsFragment.GetMetars getMeasurements = new MetarsFragment.GetMetars(getActivity());
-        getMeasurements.setMessageLoading("Pobieranie pomiarów...");
-        myDb.deleteDataMetarsAll();
-        getMeasurements.execute(url);
-    }
-
-    private class GetMetars extends UrlJsonAsyncTask {
-        public GetMetars(Context context) {
-            super(context);
-        }
-        boolean isInserted;
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            try {
-                JSONArray jsonMetars = json.getJSONObject("data").getJSONArray("metar_raports");
-                int length = jsonMetars.length();
-
-                for (int i = 0; i < length; i++) {
-                    String day = jsonMetars.getJSONObject(i).getString("day");
-                    String hour = jsonMetars.getJSONObject(i).getString("hour");
-                    String metar = jsonMetars.getJSONObject(i).getString("metar");
-                    String message = jsonMetars.getJSONObject(i).getString("message");
-                    String visibility = jsonMetars.getJSONObject(i).getString("visibility");
-                    String cloud_cover = jsonMetars.getJSONObject(i).getString("cloud_cover");
-                    String wind_direct = jsonMetars.getJSONObject(i).getString("wind_direct");
-                    String wind_speed = jsonMetars.getJSONObject(i).getString("wind_speed");
-                    String temperature = jsonMetars.getJSONObject(i).getString("temperature");
-                    String pressure = jsonMetars.getJSONObject(i).getString("pressure");
-                    String situation = jsonMetars.getJSONObject(i).getString("situation");
-                    String created_at = jsonMetars.getJSONObject(i).getString("created_at");
-                    String station = jsonMetars.getJSONObject(i).getString("station");
-                    isInserted = myDb.insertDataMetarRaports(station, day, hour, metar, message, created_at, visibility, cloud_cover, wind_direct, wind_speed, temperature, pressure, situation);
-                }
-                if(isInserted == true) {
-                    Toast.makeText(getActivity(), "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
-                    viewAll();
-                }
-                else
-                    Toast.makeText(getActivity(), String.format( "Nie zapisano dnaych."), Toast.LENGTH_LONG).show();
-
-            } catch (Exception e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            } finally {
-                super.onPostExecute(json);
-            }
         }
     }
 

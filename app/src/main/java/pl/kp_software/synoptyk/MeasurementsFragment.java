@@ -23,6 +23,7 @@ import java.util.List;
 
 public class MeasurementsFragment extends Fragment {
     DatabaseHelper myDb;
+    View rootView;
 
     public MeasurementsFragment() {
         // Required empty public constructor
@@ -31,28 +32,12 @@ public class MeasurementsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_measurements, container, false);
+        rootView = inflater.inflate(R.layout.fragment_measurements, container, false);
         myDb = new DatabaseHelper(getActivity());
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "MainFragment";
-
-        if (isNetworkAvailable() == true){
-            try {
-                loadMeasurementsFromAPI("http://synoptyk.kp-software.pl/api/v1/measurements.json");
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            viewAll();
-        }
+        viewAll();
         return rootView;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void viewAll() {
@@ -76,7 +61,7 @@ public class MeasurementsFragment extends Fragment {
             }
         }
 
-        ListView measurementsListView = (ListView) getView().findViewById(R.id.measurements_list_view);
+        ListView measurementsListView = (ListView) rootView.findViewById(R.id.measurements_list_view);
         if (measurementsListView != null) {
             measurementsListView.setAdapter(new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, measurementsList));
@@ -100,52 +85,6 @@ public class MeasurementsFragment extends Fragment {
             );
         } else {
             Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void loadMeasurementsFromAPI(String url) {
-        MeasurementsFragment.GetMeasurements getMeasurements = new MeasurementsFragment.GetMeasurements(getActivity());
-        getMeasurements.setMessageLoading("Pobieranie pomiarów...");
-        myDb.deleteDataMeasurementsAll();
-        getMeasurements.execute(url);
-    }
-
-    private class GetMeasurements extends UrlJsonAsyncTask {
-        public GetMeasurements(Context context) {
-            super(context);
-        }
-        boolean isInserted;
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            try {
-                JSONArray jsonTickets = json.getJSONObject("data").getJSONArray("measurements");
-                int length = jsonTickets.length();
-
-                for (int i = 0; i < length; i++) {
-                    String hour = jsonTickets.getJSONObject(i).getString("hour");
-                    String temperature = jsonTickets.getJSONObject(i).getString("temperature");
-                    String wind_speed = jsonTickets.getJSONObject(i).getString("wind_speed");
-                    String wind_direct = jsonTickets.getJSONObject(i).getString("wind_direct");
-                    String humidity = jsonTickets.getJSONObject(i).getString("humidity");
-                    String preasure = jsonTickets.getJSONObject(i).getString("preasure");
-                    String rainfall = jsonTickets.getJSONObject(i).getString("rainfall");
-                    String date = jsonTickets.getJSONObject(i).getString("date");
-                    String station = jsonTickets.getJSONObject(i).getString("station");
-                    isInserted = myDb.insertDataMeasurements(hour, temperature, wind_speed, wind_direct, humidity, preasure, rainfall, date, station);
-                }
-                if(isInserted == true) {
-                    Toast.makeText(getActivity(), "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
-                    viewAll();
-                }
-                else
-                    Toast.makeText(getActivity(), String.format( "Nie zapisano dnaych."), Toast.LENGTH_LONG).show();
-
-            } catch (Exception e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-            } finally {
-                super.onPostExecute(json);
-            }
         }
     }
 }
