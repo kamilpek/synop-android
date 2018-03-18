@@ -1,11 +1,25 @@
 package pl.kp_software.synoptyk;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,10 +29,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,6 +48,14 @@ public class MainActivity extends AppCompatActivity
     public static boolean mainFragment_active = false;
     public static String lastFragment = null;
     DatabaseHelper myDb;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    public static double latitude;
+    public static double longitude;
+    public static String measurment_content;
+    List<Integer> measurementsLocations = new ArrayList<Integer>();
+    List<Integer> giosmeasurementsLocations = new ArrayList<Integer>();
+    List<Integer> metarLocations = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         myDb = new DatabaseHelper(this);
 
         MainFragment fragment = new MainFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
+        FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
@@ -50,9 +78,70 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.INTERNET
+                }, 10);
+            }
+            loadData();
+            return;
+        } else {
+            getLocation();
+        }
+
+        loadPosition();
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        loadData();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode){
+            case 10:
+                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    getLocation();
+                    loadData();
+                }
+                return;
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLocation(){
+        locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
+
+    }
+
+    public void loadData(){
         if (isNetworkAvailable() == true){
             try {
                 loadForecastsFromAPI("http://synoptyk.kp-software.pl/api/v1/forecasts.json");
@@ -60,9 +149,19 @@ public class MainActivity extends AppCompatActivity
                 loadMetarsFromAPI("http://synoptyk.kp-software.pl/api/v1/metar_raports.json");
                 loadMeasursFromAPI("http://synoptyk.kp-software.pl/api/v1/gios_measurements.json");
 //                loadStationsFromAPI("http://synoptyk.kp-software.pl/api/v1/stations.json");
+                findNearest();
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    public void loadPosition(){
+        @SuppressLint("MissingPermission")
+        Location location = locationManager.getLastKnownLocation("gps");
+        if(location != null){
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
         }
     }
 
@@ -238,7 +337,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadForecastsFromAPI(String url) {
         MainActivity.GetForecasts getForecasts = new MainActivity.GetForecasts(this);
-        getForecasts.setMessageLoading("Pobieranie prognozy...");
+        getForecasts.setMessageLoading("Uruchamianie aplikacji...");
         myDb.deleteDataMForecastsAll();
         getForecasts.execute(url);
     }
@@ -284,7 +383,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadMeasurementsFromAPI(String url) {
         MainActivity.GetMeasurements getMeasurements = new MainActivity.GetMeasurements(this);
-        getMeasurements.setMessageLoading("Pobieranie pomiarów...");
+        getMeasurements.setMessageLoading("Uruchamianie aplikacji...");
         myDb.deleteDataMeasurementsAll();
         getMeasurements.execute(url);
     }
@@ -312,6 +411,17 @@ public class MainActivity extends AppCompatActivity
                     String date = jsonTickets.getJSONObject(i).getString("date");
                     String station = jsonTickets.getJSONObject(i).getString("station");
                     isInserted = myDb.insertDataMeasurements(hour, temperature, wind_speed, wind_direct, humidity, preasure, rainfall, date, station);
+
+                    if (latitude > 0){
+                        Location location = new Location("");
+                        Location mylocation = new Location("");
+                        location.setLatitude(jsonTickets.getJSONObject(i).getDouble("latitude"));
+                        location.setLongitude(jsonTickets.getJSONObject(i).getDouble("longitude"));
+                        mylocation.setLatitude(latitude);
+                        mylocation.setLongitude(longitude);
+                        int distance = Math.round(mylocation.distanceTo(location));
+                        measurementsLocations.add(distance);
+                    }
                 }
                 if(isInserted == true) {
 //                    Toast.makeText(context, "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
@@ -327,7 +437,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadMeasursFromAPI(String url) {
         MainActivity.GetMeasurs getMeasurs = new MainActivity.GetMeasurs(this);
-        getMeasurs.setMessageLoading("Pobieranie pomiarów...");
+        getMeasurs.setMessageLoading("Uruchamianie aplikacji...");
         myDb.deleteDataGiossAll();
         getMeasurs.execute(url);
     }
@@ -373,6 +483,17 @@ public class MainActivity extends AppCompatActivity
                             pm10_index, c6h6_index, no2_index, pm25_index, o3_index, so2_index, co_value,
                             pm10_value, c6h6_value, no2_value, pm25_value, o3_value, so2_value, co_date,
                             pm10_date, c6h6_date, no2_date, pm25_date, o3_date, so2_date);
+
+                    if (latitude > 0){
+                        Location location = new Location("");
+                        Location mylocation = new Location("");
+                        location.setLatitude(jsonMeasurs.getJSONObject(i).getDouble("latitude"));
+                        location.setLongitude(jsonMeasurs.getJSONObject(i).getDouble("longitude"));
+                        mylocation.setLatitude(latitude);
+                        mylocation.setLongitude(longitude);
+                        int distance = Math.round(mylocation.distanceTo(location));
+                        giosmeasurementsLocations.add(distance);
+                    }
                 }
                 if(isInserted == true) {
 //                    Toast.makeText(context, "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
@@ -388,7 +509,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadMetarsFromAPI(String url) {
         MainActivity.GetMetars getMetars = new MainActivity.GetMetars(this);
-        getMetars.setMessageLoading("Pobieranie pomiarów...");
+        getMetars.setMessageLoading("Uruchamianie aplikacji...");
         myDb.deleteDataMetarsAll();
         getMetars.execute(url);
     }
@@ -419,7 +540,19 @@ public class MainActivity extends AppCompatActivity
                     String situation = jsonMetars.getJSONObject(i).getString("situation");
                     String created_at = jsonMetars.getJSONObject(i).getString("created_at");
                     String station = jsonMetars.getJSONObject(i).getString("station");
-                    isInserted = myDb.insertDataMetarRaports(station, day, hour, metar, message, created_at, visibility, cloud_cover, wind_direct, wind_speed, temperature, pressure, situation);
+                    isInserted = myDb.insertDataMetarRaports(station, day, hour, metar, message, created_at,
+                            visibility, cloud_cover, wind_direct, wind_speed, temperature, pressure, situation);
+
+                    if (latitude > 0){
+                        Location location = new Location("");
+                        Location mylocation = new Location("");
+                        location.setLatitude(jsonMetars.getJSONObject(i).getDouble("latitude"));
+                        location.setLongitude(jsonMetars.getJSONObject(i).getDouble("longitude"));
+                        mylocation.setLatitude(latitude);
+                        mylocation.setLongitude(longitude);
+                        int distance = Math.round(mylocation.distanceTo(location));
+                        metarLocations.add(distance);
+                    }
                 }
                 if(isInserted == true) {
                     Toast.makeText(context, "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
@@ -429,6 +562,27 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             } finally {
                 super.onPostExecute(json);
+            }
+        }
+    }
+
+    public void findNearest(){
+        int min_measurements = measurementsLocations.indexOf(Collections.min(measurementsLocations));
+//        measurment_content = Integer.toString(min_measurements);
+//        measurment_content = "test";
+        Cursor measurementCursor = myDb.getDataMeasurement(Integer.toString(min_measurements));
+        if(measurementCursor.getCount() == 0){
+//            Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            while(measurementCursor.moveToNext()){
+                String hour = measurementCursor.getString(0);
+                String temperature = measurementCursor.getString(1);
+                String rainfall = measurementCursor.getString(6);
+                String date = measurementCursor.getString(7);
+                String station = measurementCursor.getString(8);
+                measurment_content = (station + " - " + date + " - " + hour + " UTC" +
+                        "\nTemperatura: " + temperature + (char) 0x00B0 + "C - Opady " + rainfall + "mm");
             }
         }
     }

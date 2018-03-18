@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainFragment extends Fragment {
+    View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        rootView = inflater.inflate(R.layout.fragment_main, container, false);
         MainActivity.mainFragment_active = true;
         MainActivity.lastFragment = "empty";
 
@@ -65,7 +67,13 @@ public class MainFragment extends Fragment {
                     }
                 });
 
-        return rootView;
+        getNearest();
 
+        return rootView;
+    }
+
+    private void getNearest(){
+        TextView measurementsTextView = (TextView) rootView.findViewById(R.id.measurementsTextView);
+        measurementsTextView.setText(MainActivity.measurment_content);
     }
 }
