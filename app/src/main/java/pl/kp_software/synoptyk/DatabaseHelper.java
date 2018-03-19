@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_MEASUREMENTS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "HOUR INTEGER, TEMPERATURE REAL, WIND_SPEED REAL, WIND_DIRECT REAL, HUMIDITY REAL, " +
-                "PREASURE REAL, RAINFALL REAL, DATE TEXT, STATION TEXT) " );
+                "PREASURE REAL, RAINFALL REAL, DATE TEXT, STATION TEXT, LATITUDE REAL, LONGITUDE REAL) " );
         db.execSQL("create table " + TABLE_FORECASTS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "HOUR TEXT, DATE TEXT, NEXT TEXT, TIMES_FROM TEXT, TIMES_TO TEXT, " +
                 "TEMPERATURES TEXT, WIND_SPEEDS TEXT, WIND_DIRECTS TEXT, PREASURES TEXT, SITUATIONS TEXT," +
@@ -39,14 +39,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "NAME TEXT, NUMBER INTEGER, LATITUDE REAL, LONGITUDE REAL, STATION_ID INTEGER, ELEVATION INTEGER)" );
         db.execSQL("create table " + TABLE_METAR_RAPORTS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "STATION INTEGER, DAY INTEGER, HOUR INTEGER, METAR TEXT, MESSAGE TEXT, CREATED_AT TEXT, SITUATION TEXT, " +
-                "VISIBILITY TEXT, CLOUD_COVER TEXT, WIND_DIRECT TEXT, WIND_SPEED TEXT, TEMPERATURE TEXT, PRESSURE TEXT)" );
+                "VISIBILITY TEXT, CLOUD_COVER TEXT, WIND_DIRECT TEXT, WIND_SPEED TEXT, TEMPERATURE TEXT, PRESSURE TEXT, " +
+                "LATITUDE REAL, LONGITUDE REAL)" );
         db.execSQL("create table " + TABLE_GIOS_STATIONS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "NAME TEXT, NUMBER INTEGER, LATITUDE REAL, LONGITUDE REAL, STATION_ID INTEGER, CITY TEXT)" );
         db.execSQL("create table " + TABLE_GIOS_MEASURMENTS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "STATION TEXT, CALC_DATE TEXT, ST_INDEX INTEGER, CO_INDEX INTEGER, PM10_INDEX INTEGER, C6H6_INDEX INTEGER, " +
                 "NO2_INDEX INTEGER, PM25_INDEX INTEGER, O3_INDEX INTEGER, SO2_INDEX INTEGER, CO_VALUE REAL, PM10_VALUE REAL, " +
                 "C6H6_VALUE REAL, NO2_VALUE REAL, PM25_VALUE REAL, O3_VALUE REAL, SO2_VALUE REAL, CO_DATE TEXT, PM10_DATE TEXT, " +
-                "C6H6_DATE TEXT, NO2_DATE TEXT, PM25_DATE TEXT, O3_DATE TEXT, SO2_DATE TEXT)" );
+                "C6H6_DATE TEXT, NO2_DATE TEXT, PM25_DATE TEXT, O3_DATE TEXT, SO2_DATE TEXT, LATITUDE REAL, LONGITUDE REAL)" );
     }
 
     @Override
@@ -62,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean insertDataMeasurements(String hour, String temperature, String wind_speed, String wind_direct, String humidity,
-                                          String preasure, String rainfall, String date, String station){
+                                          String preasure, String rainfall, String date, String station, String station_latitude, String station_longitude){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("HOUR", hour);
@@ -74,6 +75,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put("RAINFALL", rainfall);
         contentValues.put("DATE", date);
         contentValues.put("STATION", station);
+        contentValues.put("LATITUDE", station_latitude);
+        contentValues.put("LONGITUDE", station_longitude);
         long result = db.insert(TABLE_MEASUREMENTS, null, contentValues);
         if(result == -1)
             return false;
@@ -138,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean insertDataMetarRaports(String station, String day, String hour, String metar, String message, String created_at,
                                           String visibility, String cloud_cover, String wind_direct, String wind_speed, String temperature,
-                                          String pressure, String situation){
+                                          String pressure, String situation, String latitude, String longitude){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("STATION", station);
@@ -154,6 +157,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put("TEMPERATURE", temperature);
         contentValues.put("PRESSURE", pressure);
         contentValues.put("SITUATION", situation);
+        contentValues.put("LATITUDE", latitude);
+        contentValues.put("LONGITUDE", longitude);
         long result = db.insert(TABLE_METAR_RAPORTS, null, contentValues);
         if(result == -1)
             return false;
@@ -181,7 +186,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                              String c6h6_index, String no2_index, String pm25_index, String o3_index, String so2_index,
                                              String co_value, String pm10_value, String c6h6_value, String no2_value, String pm25_value,
                                              String o3_value, String so2_value, String co_date, String pm10_date, String c6h6_date,
-                                             String no2_date, String pm25_date, String o3_date, String so2_date){
+                                             String no2_date, String pm25_date, String o3_date, String so2_date, String latitude, String longitude){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("STATION", station);
@@ -208,6 +213,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put("PM25_DATE", pm25_date);
         contentValues.put("O3_DATE", o3_date);
         contentValues.put("SO2_DATE", so2_date);
+        contentValues.put("LATITUDE", latitude);
+        contentValues.put("LONGITUDE", longitude);
         long result = db.insert(TABLE_GIOS_MEASURMENTS, null, contentValues);
         if(result == -1)
             return false;
@@ -218,7 +225,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllDataMeasurements(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select HOUR, TEMPERATURE, WIND_SPEED, WIND_DIRECT, HUMIDITY, PREASURE," +
-                "RAINFALL, DATE, STATION, ID from "+ TABLE_MEASUREMENTS, null);
+                "RAINFALL, DATE, STATION, ID, LATITUDE, LONGITUDE from "+ TABLE_MEASUREMENTS, null);
         return res;
     }
 
@@ -244,7 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllDataMetarRaports(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select STATION, DAY, HOUR, METAR, MESSAGE, CREATED_AT, SITUATION, VISIBILITY, CLOUD_COVER, WIND_DIRECT, " +
-                "WIND_SPEED, TEMPERATURE, PRESSURE, ID from "+ TABLE_METAR_RAPORTS + " ORDER BY STATION", null);
+                "WIND_SPEED, TEMPERATURE, PRESSURE, ID, LATITUDE, LONGITUDE from "+ TABLE_METAR_RAPORTS + " ORDER BY STATION", null);
         return res;
     }
 
@@ -252,7 +259,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select STATION, CALC_DATE, ST_INDEX, ID, CO_INDEX, PM10_INDEX, C6H6_INDEX, NO2_INDEX, PM25_INDEX, O3_INDEX, " +
                 "SO2_INDEX, CO_VALUE, PM10_VALUE, C6H6_VALUE, NO2_VALUE, PM25_VALUE, O3_VALUE, SO2_VALUE, CO_DATE, PM10_DATE, C6H6_DATE, " +
-                "NO2_DATE, PM25_DATE, O3_DATE, SO2_DATE from "+ TABLE_GIOS_MEASURMENTS + " ORDER BY STATION", null);
+                "NO2_DATE, PM25_DATE, O3_DATE, SO2_DATE, LATITUDE, LONGITUDE from "+ TABLE_GIOS_MEASURMENTS + " ORDER BY STATION", null);
         return res;
     }
 
