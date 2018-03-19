@@ -3,7 +3,9 @@ package pl.kp_software.synoptyk;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,10 +83,10 @@ public class MainFragment extends Fragment {
 
     private void getNearest(){
         List<String> measurementsList = new ArrayList<String>();
-       List<Float> measurementsDistances = new ArrayList<Float>();
+        List<Float> measurementsDistances = new ArrayList<Float>();
         Cursor measurementsCursor = myDb.getAllDataMeasurements();
         if(measurementsCursor.getCount() == 0) {
-//            Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_SHORT).show();
+            Log.d("Measurments nearest", "Brak Danych");
             return;
         } else {
             while(measurementsCursor.moveToNext()) {
@@ -99,13 +101,13 @@ public class MainFragment extends Fragment {
                 measurementsList.add(station + " - " + date + " - " + hour + " UTC" +
                         "\nTemperatura: " + temperature + (char) 0x00B0 + "C, Opad: " + rainfall + "mm");
 
-                if (MainActivity.latitude > 0){
+                if (WelcomeActivity.latitude > 0){
                     Location location = new Location("");
                     Location mylocation = new Location("");
                     location.setLatitude(Double.parseDouble(station_latitude));
                     location.setLongitude(Double.parseDouble(station_longitude));
-                    mylocation.setLatitude(MainActivity.latitude);
-                    mylocation.setLongitude(MainActivity.longitude);
+                    mylocation.setLatitude(WelcomeActivity.latitude);
+                    mylocation.setLongitude(WelcomeActivity.longitude);
                     float distance = mylocation.distanceTo(location);
                     measurementsDistances.add(distance);
                 }
@@ -122,7 +124,7 @@ public class MainFragment extends Fragment {
         List<Float> metarsDistances = new ArrayList<Float>();
         Cursor metarsCursor = myDb.getAllDataMetarRaports();
         if(metarsCursor.getCount() == 0) {
-//            Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_SHORT).show();
+            Log.d("Metars nearest", "Brak Danych");
             return;
         } else {
             while(metarsCursor.moveToNext()) {
@@ -147,13 +149,13 @@ public class MainFragment extends Fragment {
                         "m/s, " + wind_direct + " stopni\nCiśnienie atmosferyczne: " + pressure +
                         "\nWidzialność pozioma: " + visibility);
 
-                if (MainActivity.latitude > 0){
+                if (WelcomeActivity.latitude > 0){
                     Location location = new Location("");
                     Location mylocation = new Location("");
                     location.setLatitude(Double.parseDouble(metar_latitude));
                     location.setLongitude(Double.parseDouble(metar_longitude));
-                    mylocation.setLatitude(MainActivity.latitude);
-                    mylocation.setLongitude(MainActivity.longitude);
+                    mylocation.setLatitude(WelcomeActivity.latitude);
+                    mylocation.setLongitude(WelcomeActivity.longitude);
                     float distance = mylocation.distanceTo(location);
                     metarsDistances.add(distance);
                 }
@@ -169,7 +171,7 @@ public class MainFragment extends Fragment {
         List<Float> giosDistances = new ArrayList<Float>();
         Cursor giossCursor = myDb.getAllDataGiosMeasurments();
         if(giossCursor.getCount() == 0) {
-            Toast.makeText(getActivity(), "Brak Danych", Toast.LENGTH_SHORT).show();
+            Log.d("GIOS nearest", "Brak Danych");
             return;
         } else {
             while(giossCursor.moveToNext()) {
@@ -183,13 +185,13 @@ public class MainFragment extends Fragment {
                 String id  = giossCursor.getString(3);
                 giossList.add(station + " - " + calc_date + "\nPolski indeks jakości powietrza:\n" + st_index );
 
-                if (MainActivity.latitude > 0){
+                if (WelcomeActivity.latitude > 0){
                     Location location = new Location("");
                     Location mylocation = new Location("");
                     location.setLatitude(Double.parseDouble(gios_latitude));
                     location.setLongitude(Double.parseDouble(gios_longitude));
-                    mylocation.setLatitude(MainActivity.latitude);
-                    mylocation.setLongitude(MainActivity.longitude);
+                    mylocation.setLatitude(WelcomeActivity.latitude);
+                    mylocation.setLongitude(WelcomeActivity.longitude);
                     float distance = mylocation.distanceTo(location);
                     giosDistances.add(distance);
                 }
