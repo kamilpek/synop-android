@@ -11,11 +11,13 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -37,6 +39,16 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         myDb = new DatabaseHelper(this);
 
+        Button enterButton = (Button) this.findViewById(R.id.enterButton);
+        enterButton.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Log.d("enterButton", "klik!");
+                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -55,8 +67,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void onProviderDisabled(String s) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
+//                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                startActivity(intent);
             }
         };
 
@@ -77,14 +89,11 @@ public class WelcomeActivity extends AppCompatActivity {
         loadPosition();
         loadData();
 
-        Button enterButton = (Button) this.findViewById(R.id.enterButton);
-        enterButton.setOnClickListener(
-                new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                        startActivityForResult(intent, 0);
-                    }
-                });
+        SystemClock.sleep(2000);
+
+        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        startActivity(intent);
+
     }
 
     @Override

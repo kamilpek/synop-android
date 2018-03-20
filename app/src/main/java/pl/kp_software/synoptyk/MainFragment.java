@@ -76,7 +76,11 @@ public class MainFragment extends Fragment {
                     }
                 });
 
-        getNearest();
+        try{
+            getNearest();
+        } catch (Exception e){
+            Log.d("getNearest()", "Nie można rozkminić najbliższych");
+        }
 
         return rootView;
     }
@@ -177,8 +181,8 @@ public class MainFragment extends Fragment {
             while(giossCursor.moveToNext()) {
                 String station = giossCursor.getString(0);
                 String calc_date = giossCursor.getString(1);
-                String gios_latitude = giossCursor.getString(2);
-                String gios_longitude = giossCursor.getString(3);
+                String gios_latitude = giossCursor.getString(25);
+                String gios_longitude = giossCursor.getString(26);
                 String st_index;
                 try{ st_index = get_index_level(Integer.parseInt(giossCursor.getString(2)));
                 } catch(NumberFormatException ex) { st_index = get_index_level(6); }
