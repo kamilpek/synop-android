@@ -88,6 +88,7 @@ public class MainFragment extends Fragment {
     private void getNearest(){
         List<String> measurementsList = new ArrayList<String>();
         List<Float> measurementsDistances = new ArrayList<Float>();
+        final List<String> measurementsIDs = new ArrayList<String>();
         Cursor measurementsCursor = myDb.getAllDataMeasurements();
         if(measurementsCursor.getCount() == 0) {
             Log.d("Measurments nearest", "Brak Danych");
@@ -100,6 +101,7 @@ public class MainFragment extends Fragment {
                 String date = measurementsCursor.getString(7);
                 String station = measurementsCursor.getString(8);
                 String id = measurementsCursor.getString(9);
+                measurementsIDs.add(id);
                 String station_latitude = measurementsCursor.getString(10);
                 String station_longitude = measurementsCursor.getString(11);
                 measurementsList.add(station + " - " + date + " - " + hour + " UTC" +
@@ -118,14 +120,30 @@ public class MainFragment extends Fragment {
             }
         }
 
-        int minIndex = measurementsDistances.indexOf(Collections.min(measurementsDistances));
+        final int minIndex = measurementsDistances.indexOf(Collections.min(measurementsDistances));
         String measurementContent = measurementsList.get(minIndex);
         TextView measurementsTextView = (TextView) rootView.findViewById(R.id.measurementsTextView);
         measurementsTextView.setText(measurementContent);
 
+        measurementsTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        String measurement_id = measurementsIDs.get((int) minIndex).toString();
+                        bundle.putString("measurement_id", measurement_id);
+                        MeasurementFragment measurementFragment = new MeasurementFragment();
+                        measurementFragment.setArguments(bundle);
+                        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, measurementFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
+
 
         List<String> metarsList = new ArrayList<String>();
         List<Float> metarsDistances = new ArrayList<Float>();
+        final List<String> metarsIDs = new ArrayList<String>();
         Cursor metarsCursor = myDb.getAllDataMetarRaports();
         if(metarsCursor.getCount() == 0) {
             Log.d("Metars nearest", "Brak Danych");
@@ -146,6 +164,7 @@ public class MainFragment extends Fragment {
                 String temperature = metarsCursor.getString(11);
                 String pressure = metarsCursor.getString(12);
                 String id = metarsCursor.getString(13);
+                metarsIDs.add(id);
                 String metar_latitude = metarsCursor.getString(14);
                 String metar_longitude = metarsCursor.getString(15);
                 metarsList.add(station + " - " + created_at + " - " + hour + " UTC\n" +
@@ -166,13 +185,30 @@ public class MainFragment extends Fragment {
             }
         }
 
-        int minMetar = metarsDistances.indexOf(Collections.min(metarsDistances));
+        final int minMetar = metarsDistances.indexOf(Collections.min(metarsDistances));
         String metarContent = metarsList.get(minMetar);
         TextView metarTextView = (TextView) rootView.findViewById(R.id.metarTextView);
         metarTextView.setText(metarContent);
 
+        metarTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        String metar_id = metarsIDs.get((int) minMetar).toString();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("metar_id", metar_id);
+                        MetarFragment metarFragment = new MetarFragment();
+                        metarFragment.setArguments(bundle);
+                        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, metarFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
+
+
         List<String> giossList = new ArrayList<String>();
         List<Float> giosDistances = new ArrayList<Float>();
+        final List<String> giossIDs = new ArrayList<String>();
         Cursor giossCursor = myDb.getAllDataGiosMeasurments();
         if(giossCursor.getCount() == 0) {
             Log.d("GIOS nearest", "Brak Danych");
@@ -183,10 +219,11 @@ public class MainFragment extends Fragment {
                 String calc_date = giossCursor.getString(1);
                 String gios_latitude = giossCursor.getString(25);
                 String gios_longitude = giossCursor.getString(26);
+                String id  = giossCursor.getString(3);
+                giossIDs.add(id);
                 String st_index;
                 try{ st_index = get_index_level(Integer.parseInt(giossCursor.getString(2)));
                 } catch(NumberFormatException ex) { st_index = get_index_level(6); }
-                String id  = giossCursor.getString(3);
                 giossList.add(station + " - " + calc_date + "\nPolski indeks jakości powietrza:\n" + st_index );
 
                 if (WelcomeActivity.latitude > 0){
@@ -202,10 +239,25 @@ public class MainFragment extends Fragment {
             }
         }
 
-        int minGios = giosDistances.indexOf(Collections.min(giosDistances));
+        final int minGios = giosDistances.indexOf(Collections.min(giosDistances));
         String giosContent = giossList.get(minGios);
         TextView giosTextView = (TextView) rootView.findViewById(R.id.giosTextView);
         giosTextView.setText(giosContent);
+
+        giosTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        String measur_id = giossIDs.get((int) minGios).toString();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("measur_id", measur_id);
+                        GiosFragment giosFragment = new GiosFragment();
+                        giosFragment.setArguments(bundle);
+                        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, giosFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
     }
 
     public String get_index_level(Integer level){

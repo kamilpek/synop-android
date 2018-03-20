@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="2dp"
+        android:padding="5dp"
         tools:context="pl.kp_software.synoptyk.MainFragment">
 
         <LinearLayout
@@ -65,7 +65,7 @@
                 android:id="@+id/giosTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Najbliższy pomair jakości powietrza\n(włącz lokalizację, aby zobaczyć)"
+                android:text="Najbliższy pomiar jakości powietrza\n(włącz lokalizację, aby zobaczyć)"
                 android:textSize="14sp"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"

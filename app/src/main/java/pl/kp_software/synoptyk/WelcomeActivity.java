@@ -32,6 +32,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private LocationListener locationListener;
     public static double latitude;
     public static double longitude;
+    String locationProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 });
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationProvider = LocationManager.NETWORK_PROVIDER;
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -110,8 +112,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void getLocation(){
-        locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
-
+//        locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
     }
 
     public void loadData(){
@@ -129,7 +131,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public void loadPosition(){
         @SuppressLint("MissingPermission")
-        Location location = locationManager.getLastKnownLocation("gps");
+        Location location = locationManager.getLastKnownLocation(locationProvider);
         if(location != null){
             latitude = location.getLatitude();
             longitude = location.getLongitude();
