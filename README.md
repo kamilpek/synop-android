@@ -5,7 +5,7 @@
 Pomiary, prognozy, depesze METAR, jakość powietrza :sunny: :cloud: :snowflake:
 
 ## Wersja produktu
-* v1.3.3 (20.03.2018)
+* v1.3.4 (21.03.2018)
 
 ## Serwer
 [synoptyk.kp-software.pl](https://synoptyk.kp-software.pl/)

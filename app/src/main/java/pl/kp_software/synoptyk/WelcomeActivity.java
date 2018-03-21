@@ -44,7 +44,6 @@ public class WelcomeActivity extends AppCompatActivity {
         enterButton.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        Log.d("enterButton", "klik!");
                         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
@@ -349,9 +348,9 @@ public class WelcomeActivity extends AppCompatActivity {
                             station_latitude, station_longitude);
                 }
                 if(isInserted == true) {
-                    Toast.makeText(context, "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();
                 }
-                else Toast.makeText(context, String.format( "Nie zapisano dnaych."), Toast.LENGTH_LONG).show();
+//                else Toast.makeText(context, String.format( "Nie zapisano dnaych."), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             } finally {

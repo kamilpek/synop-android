@@ -37,6 +37,7 @@ public class ForecastFragment extends Fragment {
         String forecast_id = getArguments().getString("forecast_id");
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "ForecastsFragment";
+        ((MainActivity) getActivity()).setActionBarTitle("Prognoza warunków meteo");
 
         viewForecast(forecast_id);
         try {
@@ -86,14 +87,11 @@ public class ForecastFragment extends Fragment {
                 String hour = forecastCursor.getString(0);
                 String date = forecastCursor.getString(1);
                 String next = forecastCursor.getString(2);
-                String station = forecastCursor.getString(11);
                 String date_hour = String.format("%s, %s:00", date, hour);
 
                 TextView textView_date = rootView.findViewById(R.id.forecast_date);
                 TextView textView_next = rootView.findViewById(R.id.forecast_next);
-                TextView textView_welcome = rootView.findViewById(R.id.welcomeTitle);
 
-                textView_welcome.setText("Prognoza dla stacji " + station + ".");
                 textView_date.setText(date_hour);
                 textView_next.setText(next);
             }
@@ -145,10 +143,9 @@ public class ForecastFragment extends Fragment {
                 SimpleDateFormat sdfDestination = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
                 String strdate_from = sdfDestination.format(date_from);
                 String strdate_to = sdfDestination.format(date_to);
-                String wind_direct = wind_directs[i].substring(0, wind_directs[i].length() - 2);
                 String cardinal;
                 try{
-                    cardinal = cardinals(Integer.parseInt(wind_direct));
+                    cardinal = cardinals(Integer.parseInt(wind_directs[i].substring(0, wind_directs[i].length() - 2)));
                 } catch(NumberFormatException ex){
                     cardinal = cardinals(0);
                 }

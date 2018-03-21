@@ -3,21 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
+    android:padding="10dp"
     tools:context="pl.kp_software.synoptyk.ForecastFragment">
-
-    <TextView
-        android:id="@+id/welcomeTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Prognoza dla stacji"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -63,14 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=" "/>
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Dane pogodowe"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView android:layout_width="match_parent"
         android:layout_height="match_parent"

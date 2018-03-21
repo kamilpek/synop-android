@@ -28,6 +28,7 @@ public class MeasurementFragment extends Fragment {
         String measurement_id = getArguments().getString("measurement_id");
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "MeasurementsFragment";
+        ((MainActivity) getActivity()).setActionBarTitle("Dane synoptyczne");
 
         viewMeasurement(measurement_id);
 

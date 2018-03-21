@@ -36,6 +36,7 @@ public class GiosFragment extends Fragment {
         String measur_id = getArguments().getString("measur_id");
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "GiossFragment";
+        ((MainActivity) getActivity()).setActionBarTitle("Jakość powietrza");
 
         try {
             viewMeasurement(measur_id);

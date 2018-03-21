@@ -28,6 +28,7 @@ public class MetarFragment extends Fragment {
         String metar_id = getArguments().getString("metar_id");
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "MetarsFragment";
+        ((MainActivity) getActivity()).setActionBarTitle("Depesza METAR");
         viewMeasurement(metar_id);
         return rootView;
     }

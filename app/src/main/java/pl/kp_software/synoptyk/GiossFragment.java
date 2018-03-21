@@ -36,6 +36,7 @@ public class GiossFragment extends Fragment {
         myDb = new DatabaseHelper(getActivity());
         MainActivity.mainFragment_active = false;
         MainActivity.lastFragment = "MainFragment";
+        ((MainActivity) getActivity()).setActionBarTitle("Jakość powietrza");
         viewAll();
         return rootView;
     }
