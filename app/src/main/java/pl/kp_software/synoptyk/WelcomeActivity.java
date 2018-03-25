@@ -50,7 +50,17 @@ public class WelcomeActivity extends AppCompatActivity {
                 });
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationProvider = LocationManager.NETWORK_PROVIDER;
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){ locationProvider = LocationManager.GPS_PROVIDER; }
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){ locationProvider = LocationManager.NETWORK_PROVIDER; }
+        if (locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)){ locationProvider = LocationManager.PASSIVE_PROVIDER; }
+//
+//        if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) ||
+//                !(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) ||
+//                !(locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))){
+//            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            startActivity(intent);
+//        }
+
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -68,8 +78,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void onProviderDisabled(String s) {
-//                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                startActivity(intent);
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
             }
         };
 
@@ -111,7 +121,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void getLocation(){
-//        locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
         locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
     }
 
