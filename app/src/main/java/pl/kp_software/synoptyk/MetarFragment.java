@@ -26,8 +26,9 @@ public class MetarFragment extends Fragment {
         myDb = new DatabaseHelper(getActivity());
         rootView = inflater.inflate(R.layout.fragment_metar, container, false);
         String metar_id = getArguments().getString("metar_id");
+        String last_fragment = getArguments().getString("last_fragment");
         MainActivity.mainFragment_active = false;
-        MainActivity.lastFragment = "MetarsFragment";
+        MainActivity.lastFragment = last_fragment;
         ((MainActivity) getActivity()).setActionBarTitle("Depesza METAR");
         viewMeasurement(metar_id);
         return rootView;

@@ -74,6 +74,7 @@ public class ForecastsFragment extends Fragment {
 
                             Bundle bundle = new Bundle();
                             bundle.putString("forecast_id", forecast_id);
+                            bundle.putString("last_fragment", "ForecastsFragment");
 
                             ForecastFragment forecastFragment = new ForecastFragment();
                             forecastFragment.setArguments(bundle);

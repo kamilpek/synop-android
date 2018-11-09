@@ -35,8 +35,9 @@ public class ForecastFragment extends Fragment {
         myDb = new DatabaseHelper(getActivity());
         rootView = inflater.inflate(R.layout.fragment_forecast, container, false);
         String forecast_id = getArguments().getString("forecast_id");
+        String last_fragment = getArguments().getString("last_fragment");
         MainActivity.mainFragment_active = false;
-        MainActivity.lastFragment = "ForecastsFragment";
+        MainActivity.lastFragment = last_fragment;
         ((MainActivity) getActivity()).setActionBarTitle("Prognoza warunków meteo");
 
         viewForecast(forecast_id);

@@ -26,8 +26,9 @@ public class MeasurementFragment extends Fragment {
         myDb = new DatabaseHelper(getActivity());
         rootView = inflater.inflate(R.layout.fragment_measurement, container, false);
         String measurement_id = getArguments().getString("measurement_id");
+        String last_fragment = getArguments().getString("last_fragment");
         MainActivity.mainFragment_active = false;
-        MainActivity.lastFragment = "MeasurementsFragment";
+        MainActivity.lastFragment = last_fragment;
         ((MainActivity) getActivity()).setActionBarTitle("Dane synoptyczne");
 
         viewMeasurement(measurement_id);

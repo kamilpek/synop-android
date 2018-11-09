@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class CopyrightsFragment extends Fragment {
+    View rootView = null;
+
     public CopyrightsFragment() {
         // Required empty public constructor
     }
@@ -20,7 +22,10 @@ public class CopyrightsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_copyrights, container, false);
+
+        rootView = inflater.inflate(R.layout.fragment_copyrights, container, false);
+        MainActivity.lastFragment = "MainFragment";
+
+        return rootView;
     }
 }

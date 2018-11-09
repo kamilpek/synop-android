@@ -74,6 +74,7 @@ public class MeasurementsFragment extends Fragment {
 
                             Bundle bundle = new Bundle();
                             bundle.putString("measurement_id", measurement_id);
+                            bundle.putString("last_fragment", "MeasurementsFragment");
 
                             MeasurementFragment measurementFragment = new MeasurementFragment();
                             measurementFragment.setArguments(bundle);

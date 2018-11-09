@@ -1,5 +1,6 @@
 package pl.kp_software.synoptyk;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class MainFragment extends Fragment {
         myDb = new DatabaseHelper(getActivity());
         MainActivity.mainFragment_active = true;
         MainActivity.lastFragment = "empty";
+        ((MainActivity) getActivity()).setActionBarTitle("Synoptyk");
 
         Button measurementsButton = (Button) rootView.findViewById(R.id.measurementsButton);
         measurementsButton.setOnClickListener(
@@ -76,10 +78,12 @@ public class MainFragment extends Fragment {
                     }
                 });
 
+//        getNearest();
+
         try{
             getNearest();
         } catch (Exception e){
-            Log.d("getNearest()", "Nie można rozkminić najbliższych");
+            Log.d("getNearest()", "Nie można wyświetlić najbliższych: " + e);
         }
 
         return rootView;
@@ -131,6 +135,7 @@ public class MainFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         String measurement_id = measurementsIDs.get((int) minIndex).toString();
                         bundle.putString("measurement_id", measurement_id);
+                        bundle.putString("last_fragment", "MainFragment");
                         MeasurementFragment measurementFragment = new MeasurementFragment();
                         measurementFragment.setArguments(bundle);
                         android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -140,6 +145,63 @@ public class MainFragment extends Fragment {
                     }
                 });
 
+//        ----------
+
+        List<String> forecastsList = new ArrayList<String>();
+        List<Float> forecastsDistances = new ArrayList<Float>();
+        final List<String> forecastsIDs = new ArrayList<String>();
+        Cursor forecastsCursor = myDb.getAllDataForecasts();
+        if(forecastsCursor.getCount() == 0) {
+            Log.d("Forecasts nearest", "Brak Danych");
+            return;
+        } else {
+            while(forecastsCursor.moveToNext()) {
+                String hour = forecastsCursor.getString(0);
+                String date = forecastsCursor.getString(1);
+                String next = forecastsCursor.getString(2);
+                String station = forecastsCursor.getString(11);
+                String id = forecastsCursor.getString(12);
+                String station_latitude = forecastsCursor.getString(13);
+                String station_longitude = forecastsCursor.getString(14);
+                forecastsList.add(station + " - " + date + " - " + hour + " UTC" +
+                        "\nNastępna prognoza: " + next );
+                forecastsIDs.add(id);
+
+                if (WelcomeActivity.latitude > 0){
+                    Location location = new Location("");
+                    Location mylocation = new Location("");
+                    location.setLatitude(Double.parseDouble(station_latitude));
+                    location.setLongitude(Double.parseDouble(station_longitude));
+                    mylocation.setLatitude(WelcomeActivity.latitude);
+                    mylocation.setLongitude(WelcomeActivity.longitude);
+                    float distance = mylocation.distanceTo(location);
+                    forecastsDistances.add(distance);
+                }
+            }
+        }
+
+        final int minForecast = forecastsDistances.indexOf(Collections.min(forecastsDistances));
+        String forecastContent = forecastsList.get(minIndex);
+        TextView forecastTextView = (TextView) rootView.findViewById(R.id.forecastTextView);
+        forecastTextView.setText(forecastContent);
+
+        forecastTextView.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        String forecast_id = forecastsIDs.get((int) minForecast).toString();
+                        bundle.putString("forecast_id", forecast_id);
+                        bundle.putString("last_fragment", "MainFragment");
+                        ForecastFragment forecastFragment = new ForecastFragment();
+                        forecastFragment.setArguments(bundle);
+                        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                                getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, forecastFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
+
+//        ----------
 
         List<String> metarsList = new ArrayList<String>();
         List<Float> metarsDistances = new ArrayList<Float>();
@@ -196,6 +258,7 @@ public class MainFragment extends Fragment {
                         String metar_id = metarsIDs.get((int) minMetar).toString();
                         Bundle bundle = new Bundle();
                         bundle.putString("metar_id", metar_id);
+                        bundle.putString("last_fragment", "MainFragment");
                         MetarFragment metarFragment = new MetarFragment();
                         metarFragment.setArguments(bundle);
                         android.support.v4.app.FragmentTransaction fragmentTransaction =
@@ -205,6 +268,7 @@ public class MainFragment extends Fragment {
                     }
                 });
 
+//        ----------
 
         List<String> giossList = new ArrayList<String>();
         List<Float> giosDistances = new ArrayList<Float>();
@@ -250,6 +314,7 @@ public class MainFragment extends Fragment {
                         String measur_id = giossIDs.get((int) minGios).toString();
                         Bundle bundle = new Bundle();
                         bundle.putString("measur_id", measur_id);
+                        bundle.putString("last_fragment", "MainFragment");
                         GiosFragment giosFragment = new GiosFragment();
                         giosFragment.setArguments(bundle);
                         android.support.v4.app.FragmentTransaction fragmentTransaction =

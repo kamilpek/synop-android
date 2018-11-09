@@ -34,8 +34,9 @@ public class GiosFragment extends Fragment {
         myDb = new DatabaseHelper(getActivity());
         rootView = inflater.inflate(R.layout.fragment_gios, container, false);
         String measur_id = getArguments().getString("measur_id");
+        String last_fragment = getArguments().getString("last_fragment");
         MainActivity.mainFragment_active = false;
-        MainActivity.lastFragment = "GiossFragment";
+        MainActivity.lastFragment = last_fragment;
         ((MainActivity) getActivity()).setActionBarTitle("Jakość powietrza");
 
         try {

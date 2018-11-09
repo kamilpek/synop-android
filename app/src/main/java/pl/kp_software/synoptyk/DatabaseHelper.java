@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_FORECASTS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "HOUR TEXT, DATE TEXT, NEXT TEXT, TIMES_FROM TEXT, TIMES_TO TEXT, " +
                 "TEMPERATURES TEXT, WIND_SPEEDS TEXT, WIND_DIRECTS TEXT, PREASURES TEXT, SITUATIONS TEXT," +
-                "PRECIPITATIONS TEXT, STATION TEXT) " );
+                "PRECIPITATIONS TEXT, STATION TEXT, LATITUDE REAL, LONGITUDE REAL) " );
         db.execSQL("create table " + TABLE_STATIONS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "NAME TEXT, NUMBER INTEGER, LATITUDE REAL, LONGITUDE REAL, STATION_ID INTEGER)" );
         db.execSQL("create table " + TABLE_METAR_STATIONS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -86,7 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean insertDataForecasts(String hour, String date, String next, String times_from, String times_to, String temperatures,
                                        String wind_speeds, String wind_directs, String preasures, String situations, String precipitations,
-                                       String station){
+                                       String station, String latitude, String longitude){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("HOUR", hour);
@@ -101,6 +101,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put("SITUATIONS", situations);
         contentValues.put("PRECIPITATIONS", precipitations);
         contentValues.put("STATION", station);
+        contentValues.put("LATITUDE", latitude);
+        contentValues.put("LONGITUDE", longitude);
         long result = db.insert(TABLE_FORECASTS, null, contentValues);
         if(result == -1)
             return false;
@@ -232,7 +234,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllDataForecasts(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select HOUR, DATE, NEXT, TIMES_FROM, TIMES_TO, TEMPERATURES, WIND_SPEEDS, WIND_DIRECTS, " +
-                "PREASURES, SITUATIONS, PRECIPITATIONS, STATION, ID from "+ TABLE_FORECASTS, null);
+                "PREASURES, SITUATIONS, PRECIPITATIONS, STATION, ID, LATITUDE, LONGITUDE from "+ TABLE_FORECASTS, null);
         return res;
     }
 

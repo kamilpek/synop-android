@@ -79,6 +79,33 @@
                 android:textColor="#FFFFFF"
                 android:text="Prognoza warunków meteo" />
 
+            <TextView
+                android:id="@+id/forecastTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Prognoza warunków meteo dla najbliższej stacji\n(włącz lokalizację, aby zobaczyć)"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/spaceBeforeIconTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" "
+                android:textSize="14sp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:cropToPadding="true"
+                android:gravity="center"
+                android:src="@mipmap/synoptyk_icon" />
+
         </LinearLayout>
 
     </LinearLayout>

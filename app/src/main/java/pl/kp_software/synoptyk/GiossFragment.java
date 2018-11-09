@@ -97,6 +97,7 @@ public class GiossFragment extends Fragment {
 
                             Bundle bundle = new Bundle();
                             bundle.putString("measur_id", measur_id);
+                            bundle.putString("last_fragment", "GiossFragment");
 
                             GiosFragment giosFragment = new GiosFragment();
                             giosFragment.setArguments(bundle);

@@ -53,13 +53,6 @@ public class WelcomeActivity extends AppCompatActivity {
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){ locationProvider = LocationManager.GPS_PROVIDER; }
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){ locationProvider = LocationManager.NETWORK_PROVIDER; }
         if (locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)){ locationProvider = LocationManager.PASSIVE_PROVIDER; }
-//
-//        if (!(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) ||
-//                !(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) ||
-//                !(locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))){
-//            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//            startActivity(intent);
-//        }
 
         locationListener = new LocationListener() {
             @Override
@@ -100,7 +93,7 @@ public class WelcomeActivity extends AppCompatActivity {
         loadPosition();
         loadData();
 
-        SystemClock.sleep(2000);
+        SystemClock.sleep(10000);
 
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(intent);
@@ -185,7 +178,9 @@ public class WelcomeActivity extends AppCompatActivity {
                     String situations = jsonTickets.getJSONObject(i).getString("situations");
                     String precipitations = jsonTickets.getJSONObject(i).getString("precipitations");
                     String station = jsonTickets.getJSONObject(i).getString("station_number");
-                    isInserted = myDb.insertDataForecasts(hour, date, next, times_from, times_to, temperatures, wind_speeds, wind_directs, preasures, situations, precipitations, station);
+                    String latitude = jsonTickets.getJSONObject(i).getString("latitude");
+                    String longitude = jsonTickets.getJSONObject(i).getString("longitude");
+                    isInserted = myDb.insertDataForecasts(hour, date, next, times_from, times_to, temperatures, wind_speeds, wind_directs, preasures, situations, precipitations, station, latitude, longitude);
                 }
                 if(isInserted == true) {
 //                    Toast.makeText(context, "Pobrano i zapisano Dane", Toast.LENGTH_LONG).show();

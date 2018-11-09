@@ -82,6 +82,7 @@ public class MetarsFragment extends Fragment {
 
                             Bundle bundle = new Bundle();
                             bundle.putString("metar_id", metar_id);
+                            bundle.putString("last_fragment", "MetarsFragment");
 
                             MetarFragment metarFragment = new MetarFragment();
                             metarFragment.setArguments(bundle);
